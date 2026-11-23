@@ -189,9 +189,12 @@ if upload:
             st.write("Your image is ready to be passed through the MobileNetV2 pipeline.")
             st.caption(f"Resolution: {img.width} × {img.height} pixels")
             if st.button("✦  Analyse leaf", type="primary", use_container_width=True, disabled=not ready):
-                with st.spinner("Analysing leaf patterns..."):
+                st.session_state.pop("prediction", None)
+                with st.spinner("Checking image and analysing leaf patterns..."):
                     try:
                         st.session_state["prediction"] = predict_image(img)
+                    except ValueError as exc:
+                        st.warning(str(exc))
                     except Exception as exc:
                         st.error(f"Prediction failed: {exc}")
             st.markdown("</div>", unsafe_allow_html=True)
